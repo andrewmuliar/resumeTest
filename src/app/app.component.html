@@ -1,0 +1,226 @@
+{{ form.value | json }}
+<form [formGroup]="form">
+  <p-stepper
+    (activeStepChange)="checkForAvailableStep($event)"
+    [(activeStep)]="activeStep"
+  >
+    <!--  -->
+    <p-stepperPanel header="Про мене">
+      <ng-template
+        pTemplate="content"
+        let-nextCallback="nextCallback"
+        let-index="index"
+      >
+        <div formGroupName="me">
+          <div>
+            <input type="text" pInputText formControlName="first_name" />
+          </div>
+          <div>
+            <input type="text" pInputText formControlName="last_name" />
+          </div>
+          <div>
+            <!-- [maxDate]="maxDate"
+            [minDate]="minDate" -->
+            <input type="text" pInputText formControlName="birthday" />
+          </div>
+          <div>
+            <input type="text" pInputText formControlName="email" />
+          </div>
+          <div>
+            <input type="text" pInputText formControlName="phone" />
+          </div>
+        </div>
+        <div class="flex pt-4 justify-content-end">
+          <p-button
+            label="Далі"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            [disabled]="!isGroupValid('me')"
+            (onClick)="customNext(nextCallback, 'me')"
+          />
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+
+    <!--  -->
+    <p-stepperPanel header="Освіта">
+      <ng-template
+        pTemplate="content"
+        let-prevCallback="prevCallback"
+        let-nextCallback="nextCallback"
+        let-index="index"
+      >
+        <div formGroupName="education">
+          <ng-container formArrayName="education_items">
+            <div
+              *ngFor="let control of education.controls; let index = index"
+              [formGroupName]="index"
+            >
+              <input type="text" pInputText formControlName="university" />
+              <input type="text" pInputText formControlName="date" />
+            </div>
+            <button pButton label="" (click)="addEducation()">+</button>
+          </ng-container>
+          <div>
+            <label for="master">Маю вищу освіту</label>
+            <input
+              type="checkbox"
+              id="master"
+              formControlName="has_master_degree"
+            />
+          </div>
+        </div>
+        <div class="flex pt-4 justify-content-between">
+          <p-button
+            label="Back"
+            icon="pi pi-arrow-left"
+            (onClick)="customPrev(prevCallback)"
+          />
+          <p-button
+            label="Next"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            (onClick)="customNext(nextCallback, 'education')"
+          />
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+
+    <!--  -->
+    <p-stepperPanel header="Вища освіта">
+      <ng-template
+        pTemplate="content"
+        let-prevCallback="prevCallback"
+        let-nextCallback="nextCallback"
+        let-index="index"
+      >
+        <div formGroupName="master">
+          <ng-container formArrayName="education_master">
+            <div
+              *ngFor="let control of masterDegree.controls; let index = index"
+              [formGroupName]="index"
+            >
+              <input type="text" pInputText formControlName="university" />
+              <input type="text" pInputText formControlName="date" />
+              <input type="text" pInputText formControlName="level" />
+            </div>
+            <button
+              pButton
+              label="Додати ступінь"
+              (click)="addMasterDegree()"
+            ></button>
+          </ng-container>
+          <div class="flex pt-4 justify-content-between">
+            <p-button
+              label="Назад"
+              icon="pi pi-arrow-left"
+              (onClick)="customPrev(prevCallback)"
+            />
+            <p-button
+              label="Далі"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              (onClick)="customNext(nextCallback, 'master')"
+            />
+          </div>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+    <p-stepperPanel header="Досвід роботи">
+      <ng-template
+        pTemplate="content"
+        let-prevCallback="prevCallback"
+        let-nextCallback="nextCallback"
+        let-index="index"
+      >
+        <div formGroupName="job">
+          <ng-container formArrayName="job_exp">
+            <div
+              *ngFor="let control of jobs.controls; let index = index"
+              [formGroupName]="index"
+            >
+              <input type="text" pInputText formControlName="place" />
+              <input type="text" pInputText formControlName="role" />
+            </div>
+            <button (click)="addJob()">Додати місце роботи</button>
+          </ng-container>
+          <div class="flex pt-4 justify-content-between">
+            <p-button
+              label="Назад"
+              icon="pi pi-arrow-left"
+              (onClick)="customPrev(prevCallback)"
+            />
+            <p-button
+              label="Далі"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              (onClick)="customNext(nextCallback, 'job')"
+            />
+          </div>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+    <p-stepperPanel header="Результат">
+      <ng-template
+        pTemplate="content"
+        let-prevCallback="prevCallback"
+        let-index="index"
+      >
+        <!--  -->
+        <div class="result">
+          <div class="divider">
+            <div>first_name</div>
+            <div>{{ form.get(["me", "first_name"])!.value }}</div>
+          </div>
+          <div class="divider">
+            <div>last_name</div>
+            <div>{{ form.get(["me", "last_name"])!.value }}</div>
+          </div>
+          <div class="divider">
+            <div>birthday</div>
+            <div>{{ form.get(["me", "birthday"])!.value }}</div>
+          </div>
+          <div class="divider">
+            <div>email</div>
+            <div>{{ form.get(["me", "email"])!.value }}</div>
+          </div>
+          <div class="divider">
+            <div>phone</div>
+            <div>{{ form.get(["me", "phone"])!.value }}</div>
+          </div>
+        </div>
+
+        <!--  -->
+        <div class="result">
+          <!--  -->
+          <div>
+            <div>education</div>
+            <div *ngFor="let item of education.controls" class="divider">
+              {{ item.value.university }}
+              {{ item.value.date }}
+            </div>
+          </div>
+
+          <!--  -->
+          <div>
+            <div>masterDegree</div>
+            <div *ngFor="let item of masterDegree.controls" class="divider">
+              {{ item.value.university }}
+              {{ item.value.date }}
+              {{ item.value.level }}
+            </div>
+          </div>
+          <div>
+            <div>jobs</div>
+            <div *ngFor="let item of jobs.controls" class="divider">
+              {{ item.value.role }}
+              {{ item.value.place }}
+            </div>
+          </div>
+          <!--  -->
+        </div>
+        <!--  -->
+      </ng-template>
+    </p-stepperPanel>
+  </p-stepper>
+</form>
