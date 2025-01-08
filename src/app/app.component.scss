@@ -1,3 +1,9 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
 .divider {
   padding-bottom: 10px;
   border-bottom: 1px solid black;

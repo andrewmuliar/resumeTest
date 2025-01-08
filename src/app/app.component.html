@@ -11,33 +11,53 @@
         let-nextCallback="nextCallback"
         let-index="index"
       >
-        <div formGroupName="me">
-          <div>
-            <input type="text" pInputText formControlName="first_name" />
-          </div>
-          <div>
-            <input type="text" pInputText formControlName="last_name" />
-          </div>
-          <div>
-            <!-- [maxDate]="maxDate"
+        <div formGroupName="me" class="group">
+          <p-floatLabel>
+            <input
+              type="text"
+              pInputText
+              formControlName="first_name"
+              id="first_name"
+            />
+            <label for="first_name">Ім'я</label>
+          </p-floatLabel>
+          <!--  -->
+          <p-floatLabel>
+            <input
+              type="text"
+              pInputText
+              formControlName="last_name"
+              id="last_name"
+            />
+            <label for="last_name">Прізвище</label>
+          </p-floatLabel>
+          <!--  -->
+          <!-- [maxDate]="maxDate"
             [minDate]="minDate" -->
-            <input type="text" pInputText formControlName="birthday" />
+          <p-floatLabel>
+            <input
+              type="text"
+              pInputText
+              formControlName="birthday"
+              id="birthday"
+            />
+            <label for="birthday">Дата народження</label>
+          </p-floatLabel>
+
+          <p-floatLabel>
+            <input type="text" pInputText formControlName="phone" id="phone" />
+            <label for="phone">Телефон</label>
+          </p-floatLabel>
+
+          <div class="flex pt-4 justify-content-end">
+            <p-button
+              label="Далі"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              [disabled]="!isGroupValid('me')"
+              (onClick)="customNext(nextCallback, 'me')"
+            />
           </div>
-          <div>
-            <input type="text" pInputText formControlName="email" />
-          </div>
-          <div>
-            <input type="text" pInputText formControlName="phone" />
-          </div>
-        </div>
-        <div class="flex pt-4 justify-content-end">
-          <p-button
-            label="Далі"
-            icon="pi pi-arrow-right"
-            iconPos="right"
-            [disabled]="!isGroupValid('me')"
-            (onClick)="customNext(nextCallback, 'me')"
-          />
         </div>
       </ng-template>
     </p-stepperPanel>
@@ -142,7 +162,7 @@
               <input type="text" pInputText formControlName="place" />
               <input type="text" pInputText formControlName="role" />
             </div>
-            <button (click)="addJob()">Додати місце роботи</button>
+            <button pButton (click)="addJob()">Додати місце роботи</button>
           </ng-container>
           <div class="flex pt-4 justify-content-between">
             <p-button

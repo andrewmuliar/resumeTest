@@ -1,24 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import {
   FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
-} from '@angular/forms';
-import { LocalStorageService } from './services/localStorage.service';
+} from "@angular/forms";
+import { LocalStorageService } from "./services/localStorage.service";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
-  title = 'testresume';
+  title = "testresume";
 
   form: FormGroup;
 
   activeStep = 0;
+  private readonly masterDegreeStepIndex = 3; // Make as const if tabs count changes
 
   constructor(
     private fb: FormBuilder,
@@ -54,7 +55,6 @@ export class AppComponent implements OnInit {
 
   prefillForm() {
     if (!this.storageService.isStorageEmpty()) {
-      console.log('prefill');
       this.form.setValue(this.storageService.getDataFromStorage());
     }
   }
@@ -85,15 +85,15 @@ export class AppComponent implements OnInit {
   }
 
   get education() {
-    return this.form.get(['education', 'education_items']) as FormArray;
+    return this.form.get(["education", "education_items"]) as FormArray;
   }
 
   get masterDegree() {
-    return this.form.get(['master', 'education_master']) as FormArray;
+    return this.form.get(["master", "education_master"]) as FormArray;
   }
 
   get jobs() {
-    return this.form.get(['job', 'job_exp']) as FormArray;
+    return this.form.get(["job", "job_exp"]) as FormArray;
   }
 
   isGroupValid(groupName: string): boolean {
@@ -106,9 +106,16 @@ export class AppComponent implements OnInit {
       this.storageService.saveToLocalStorage({
         [groupName]: this.form.get(groupName)!.value,
       });
-      nextCallBack.emit();
-    } else {
-      alert('no valid');
+      if (groupName === "education") {
+        if (this.form.get(["education", "has_master_degree"])!.value) {
+          nextCallBack.emit();
+        } else {
+          // Skip step if no degree
+          this.activeStep = this.masterDegreeStepIndex;
+        }
+      } else {
+        nextCallBack.emit();
+      }
     }
   }
 
@@ -118,9 +125,9 @@ export class AppComponent implements OnInit {
 
   checkForAvailableStep(e: any) {
     // Stepper not allow to add some logic to disable or enable steps
-    if (!this.isGroupValid('me')) {
+    if (!this.isGroupValid("me")) {
       setTimeout(() => {
-        // Change to last valid step
+        // TODO:Change to last valid step
         this.activeStep = 0;
       }, 0);
     }
